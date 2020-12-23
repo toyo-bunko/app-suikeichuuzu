@@ -98,6 +98,6 @@ import FullTextSearch from '~/components/search/FullTextSearch.vue'
 export default class search extends Vue {
   drawer: boolean = false
   baseUrl: string = process.env.BASE_URL || ''
-  title: string = "水系注図DB"
+  title: string = process.env.siteName || ""
 }
 </script>

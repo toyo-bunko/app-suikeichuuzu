@@ -23,9 +23,11 @@ const basePath = baseUrl + baseDir
 
 // meta
 const lang = 'ja'
-const siteName = '水系注図DB'
+const siteName = '水計注図DB'
+env.siteName = siteName
+
 const siteDesc =
-  "水系注図DB"
+  "水計注図のデータベースです。"
 const siteKeywords = 'IIIF'
 
 // images
@@ -35,7 +37,7 @@ const ogpImages = basePath + 'img/ogp/' // cdnPath + 'img/ogp/'
 console.log({environment, routerBase, env})
 
 // pwa
-const shortName = '水系注図DB'
+const shortName = '水計注図DB'
 const manifestIcon = 'img/icons/icon-512.png'
 // const splashscreens = cdnPath + 'img/splashscreens/'
 

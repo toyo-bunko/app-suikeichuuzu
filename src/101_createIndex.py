@@ -18,6 +18,22 @@ selections = df["selections"]
 
 print(len(selections))
 
+import csv
+
+f = open('data/dict.csv', 'r')
+
+dd = {}
+
+reader = csv.reader(f)
+header = next(reader)
+for row in reader:
+    key = row[0]
+    for i in range(1, len(row)):
+        if row[i] != "":
+            dd[row[i]] = key
+
+f.close()
+
 index = []
 
 for selection in selections:
@@ -45,6 +61,13 @@ for selection in selections:
 
             if label == "朱z墨m":
                 label = "墨朱"
+
+            if label == "地名/記述":
+                value2 = value
+                for key in dd:
+                    if key in value2:
+                        value2 = value2.replace(key, dd[key])
+                metadataObj["地名"] = [value2]
 
             if label not in metadataObj:
                 metadataObj[label] = []

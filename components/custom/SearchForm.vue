@@ -197,8 +197,8 @@ export default class SearchForm extends Vue {
       this.mark = []
     }
 
-    if (advanced['q-地名/記述']) {
-      this.location = advanced['q-地名/記述']
+    if (advanced['q-地名']) {
+      this.location = advanced['q-地名']
     } else {
       this.location = ''
     }
@@ -289,7 +289,7 @@ export default class SearchForm extends Vue {
 
     const location = this.location
     if (location !== '') {
-      query['q-地名/記述'] = location
+      query['q-地名'] = location
     }
 
     const remark = this.remark

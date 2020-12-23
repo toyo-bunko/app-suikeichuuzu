@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       baseUrl: process.env.BASE_URL,
-      title : '水系注図DB'
+      title : process.env.siteName
     }
   },
   head() {
