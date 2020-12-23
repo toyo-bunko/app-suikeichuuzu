@@ -221,6 +221,26 @@ for name in names:
             "備考" : df.iloc[j, 10],
         }
 
+# ---------
+
+# 辞書
+
+import csv
+
+f = open('data/dict.csv', 'r')
+
+dd = {}
+
+reader = csv.reader(f)
+header = next(reader)
+for row in reader:
+    key = row[0]
+    for i in range(1, len(row)):
+        if row[i] != "":
+            dd[row[i]] = key
+
+f.close()
+
 # ----------
 
 # 水名
@@ -370,6 +390,14 @@ for manifest in resources2:
 
         html = "[ <a target=\"_blank\" href=\"{}\">{}</a> ]<br/>地名/記述：{}<br/>図記号：{}".format(icc2, cleantext, m_data["地名/記述"], iconExp)
 
+        location = m_data["地名/記述"]
+
+        
+        location2 = location
+        for key in dd:
+            if key in location2:
+                location2 = location2.replace(key, dd[key])
+
         metadata = [
             {
                 "value": [
@@ -428,8 +456,11 @@ for manifest in resources2:
                 "label": "図説明"
             },
             {
-                "value": m_data["地名/記述"],
+                "value": location,
                 "label": "地名/記述"
+            },{
+                "value": location2,
+                "label": "地名"
             }
             
         ]
