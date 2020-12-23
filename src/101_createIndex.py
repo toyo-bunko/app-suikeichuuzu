@@ -51,16 +51,7 @@ for selection in selections:
             label = m["label"]
             value = m["value"]
 
-            if label == "表a裏b":
-                label = "表裏"
-
-                if value == "a":
-                    value = "表"
-                elif value == "b":
-                    value = "裏"
-
-            if label == "朱z墨m":
-                label = "墨朱"
+            
 
             if label == "地名/記述":
                 value2 = value

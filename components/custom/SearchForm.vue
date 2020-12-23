@@ -109,12 +109,13 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import axios from 'axios' 
 
 @Component({})
 export default class SearchForm extends Vue {
   vols: string[] = ['1', '2', '3', '4']
 
-  pics: string[] = ['本図']
+  pics: string[] = ['本図', '越南', '西域']
   
   sns: string[] = ['南5', '南4', '南3', '南2', "南1", "中", "北1", "北2", "北3", "北4", "北5"]
   
@@ -129,7 +130,16 @@ export default class SearchForm extends Vue {
 
   marks: string[] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
 
-  mounted() {
+  dd: any = {}
+
+  async mounted() {
+    const dd = await axios.get(
+      process.env.BASE_URL + '/data/dict.json'
+    ).then((res)=> {
+      return res.data
+    })
+    this.dd = dd
+
     this.init()
   }
 
@@ -287,8 +297,12 @@ export default class SearchForm extends Vue {
       query['fc-図記号'] = mark
     }
 
-    const location = this.location
+    let location = this.location
     if (location !== '') {
+      const dd = this.dd
+      for(let key in dd){
+        location = location.replace(key, dd[key])
+      }
       query['q-地名'] = location
     }
 

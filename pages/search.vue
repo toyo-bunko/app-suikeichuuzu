@@ -64,14 +64,20 @@ export default class search extends Vue {
   ]
 
   facetLabels: any = {
+    "冊": this.$t('冊'),
+    "図": this.$t('図'),
     "水名": this.$t('水名'),
     "水経注：巻": this.$t('水経注：巻'),
   }
 
   facetFlags: string[] = [
+    "冊",
+    "図",
     '水名',
     '水経注：巻'
   ]
+
+  dict: any = {}
 
   loadingFlag: boolean = true
 
