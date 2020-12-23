@@ -114,7 +114,7 @@ export default class ListSearchResult extends Vue {
   mounted(){
     const results = this.results
     //const members = []
-    let url = "/etc/?curation=/data/curation.json"
+    let url = this.baseUrl + "/etc/?curation="+this.baseUrl+"/data/curation.json"
     for(let i = 0; i < results.length; i++){
       const related = results[i]._source._relatedLink[0].split("&")
       const member_id = related[1].split("=")[1] + "#" + related[2]
