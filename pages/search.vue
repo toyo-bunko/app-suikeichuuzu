@@ -20,6 +20,11 @@
           :sort-options="sortOptions"
           :layout-options="layoutOptions"
         />
+
+        <div class="text-right">
+          <v-btn :href="map" target="_blank" color="primary">{{$t("view_map")}}</v-btn>
+        </div>
+
         <Result />
       </v-container>
     </template>
@@ -92,9 +97,16 @@ export default class search extends Vue {
     this.search()
   }
 
+  map: string = ""
+
+  baseUrl: string = process.env.BASE_URL || ""
+
   async search() {
     const store = this.$store
     const routeQuery = this.$route.query
+
+    const path: any = this.$route.fullPath
+    this.map = path.replace("/search", "/map") + "&curation=" + this.baseUrl+"/data/curation.json"
 
     // 初期化
     if (!routeQuery.sort) {
@@ -110,12 +122,12 @@ export default class search extends Vue {
 
     if (store.state.index == null) {
       const index = await this.$searchUtils.loadIndex(
-        process.env.BASE_URL + '/data/index.json'
+        this.baseUrl + '/data/index.json'
       )
       this.$searchUtils.initStore(store, index)
 
       const dd = await axios.get(
-        process.env.BASE_URL + '/data/dict.json'
+        this.baseUrl+ '/data/dict.json'
       ).then((res)=> {
         return res.data
       })

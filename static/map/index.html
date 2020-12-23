@@ -37,7 +37,7 @@
 
       for (i = 0; url[i]; i++) {
         var k = url[i].split('=')
-        const label = k[0]
+        const label = decodeURIComponent(k[0])
         const value = decodeURIComponent(k[1])
 
         if(!arg[label]){
@@ -56,8 +56,83 @@
       
       selections.map((selection) => {
         const members = selection.members
+
         members.map((member) => {
-          if(ids.includes(member["@id"])){
+
+          const metadata = member.metadata
+
+          const metadataObj = {}
+          metadata.map((m) => {
+            const label = m.label
+            if(!metadataObj[label]){
+              metadataObj[label] = []
+            }
+            metadataObj[label].push(m.value)
+          })
+
+          let flg = true
+          
+          for(let key in arg){
+            const values = arg[key]
+            if(key == "curation"){
+              continue
+            } else if(key == "q"){
+              values.map((value) => {
+                let flg2 = false
+                for(let f in metadataObj){
+                  metadataObj[f].map((v) => {
+                    if(String(v).includes(value)){
+                      flg2 = true
+                      return
+                    }
+                  })
+                }
+                if(!flg2){
+                  flg = false
+                }
+              })
+            } else if(key.includes("q-")){
+              const field = key.replace("q-", "")
+              values.map((value) => {
+                let flg2 = false
+                if(!metadataObj[field]){
+                  return
+                } else {
+                  metadataObj[field].map((v) => {
+                    if(String(v).includes(value)){
+                      flg2 = true
+                      return
+                    }
+                  })
+                }
+                
+                if(!flg2){
+                  flg = false
+                }
+              })
+            } else if(key.includes("fc-")){
+              const field = key.replace("fc-", "")
+              values.map((value) => {
+                let flg2 = false
+                if(!metadataObj[field]){
+                  return
+                } else {
+                  metadataObj[field].map((v) => {
+                    if(String(v) == value){
+                      flg2 = true
+                      return
+                    }
+                  })
+                }
+                
+                if(!flg2){
+                  flg = false
+                }
+              })
+            }
+          }
+
+          if(flg){
             const image = member.thumbnail.split(".tif/")[0]+".tif"
             if(!map[image]){
               map[image] = []

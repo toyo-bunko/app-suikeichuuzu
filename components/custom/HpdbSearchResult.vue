@@ -1,10 +1,5 @@
 <template>
   <div>
-
-    <p class="text-right">
-      <v-btn :href="map" target="_blank" color="primary">{{$t("view_map")}}</v-btn>
-    </p>
-
     <v-card v-for="(obj, index) in results" :key="index" class="mb-5">
       <v-card-text>
         <v-row>
@@ -109,20 +104,6 @@ export default class ListSearchResult extends Vue {
 
   get dataAll() {
     return this.$store.state.data
-  }
-
-  mounted(){
-    const results = this.results
-    //const members = []
-    let url = this.baseUrl + "/etc/?curation="+this.baseUrl+"/data/curation.json"
-    for(let i = 0; i < results.length; i++){
-      const related = results[i]._source._relatedLink[0].split("&")
-      const member_id = related[1].split("=")[1] + "#" + related[2]
-      //members.push(member_id)
-      url += "&member="+encodeURIComponent(member_id)
-    }
-    //const url = "/etc/?curation=/data/curation.json&members="+encodeURIComponent(members)
-    this.map = url
   }
 
   getLabel(id: string) {
