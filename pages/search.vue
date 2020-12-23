@@ -106,7 +106,7 @@ export default class search extends Vue {
     const routeQuery = this.$route.query
 
     const path: any = this.$route.fullPath
-    this.map = path.replace("/search", "/map") + "&curation=" + this.baseUrl+"/data/curation.json"
+    this.map = this.baseUrl + path.replace("/search", "/map") + (path.includes("?") ? "&" : "?" ) + "curation=" + this.baseUrl+"/data/curation.json"
 
     // 初期化
     if (!routeQuery.sort) {
