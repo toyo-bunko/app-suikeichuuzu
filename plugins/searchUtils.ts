@@ -96,7 +96,7 @@ export class SearchUtils {
       aggs[field] = {
         terms: {
           field: field + '.keyword',
-          size: FC_SIZE,
+          // size: FC_SIZE,
           order: {
             _count: 'desc',
           },

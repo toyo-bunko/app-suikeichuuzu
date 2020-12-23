@@ -27,6 +27,8 @@ export const state = () => ({
   data: [],
   index: null, // 転置インデックス
 
+  dictionary: {},
+
   // HPDB拡張
   selected: [],
 })
@@ -113,6 +115,9 @@ export const mutations = {
     } else {
       state.col = 4
     }
+  },
+  setDictionary(state, value) {
+    state.dictionary = value
   },
   setLayout(state, layout) {
     state.layout = layout

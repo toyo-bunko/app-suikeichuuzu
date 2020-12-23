@@ -27,6 +27,7 @@
 </template>
 
 <script lang="ts">
+import axios from "axios"
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import SearchForm from '~/components/custom/SearchForm.vue'
 
@@ -112,6 +113,13 @@ export default class search extends Vue {
         process.env.BASE_URL + '/data/index.json'
       )
       this.$searchUtils.initStore(store, index)
+
+      const dd = await axios.get(
+        process.env.BASE_URL + '/data/dict.json'
+      ).then((res)=> {
+        return res.data
+      })
+      store.commit('setDictionary', dd)
     }
 
     // ------ ファセット ---------
@@ -119,6 +127,16 @@ export default class search extends Vue {
     if (Object.keys(store.state.facetLabels)) {
       store.commit('setFacetLabels', this.facetLabels)
       store.commit('setFacetFlags', this.facetFlags)
+    }
+
+    const dd = store.state.dictionary
+
+    if(routeQuery["q-地名"]){
+      let location: any = routeQuery["q-地名"]
+      for(let key in dd){
+        location = location.replace(key, dd[key])
+      }
+      routeQuery["q-地名"] = location
     }
 
     // 検索

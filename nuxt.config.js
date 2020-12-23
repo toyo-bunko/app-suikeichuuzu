@@ -23,7 +23,7 @@ const basePath = baseUrl + baseDir
 
 // meta
 const lang = 'ja'
-const siteName = '水計注図DB'
+const siteName = '水経注図DB'
 env.siteName = siteName
 
 const siteDesc =

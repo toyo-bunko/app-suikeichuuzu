@@ -98,9 +98,13 @@
           </dt>
           <dd
             class="col-sm-9"
-            :class="obj.label === 'Phone/Word' ? 'phone' : ''"
           >
-            {{ Array.isArray(obj.value) ? obj.value.join(', ') : obj.value }}
+            <nuxt-link :to="localePath({
+              name: 'search',
+              query: getParam(obj.label, value),
+            })" v-for="(value, key2) in toArray(obj.value)" :key="key2">
+              {{value}}
+            </nuxt-link>
           </dd>
         </template>
       </dl>
@@ -225,6 +229,16 @@ export default {
         xywh +
         '&xywh_highlight=border'
       return url
+    },
+
+    getParam(label, value){
+      const param = {}
+      param["fc-"+label] = value
+      return param
+    },
+
+    toArray(value){
+      return Array.isArray(value) ? value : [value]
     }
   },
 
