@@ -45,35 +45,13 @@ import ResultHead from '~/components/search/ResultHead.vue'
 export default class search extends Vue {
   // 設定
   sortOptions: any[] = [
-    /*
     {
-      value: '_score:desc',
-      text: this.$t('relevance'),
-    },
-    */
-    {
-      value: 'm_sort:asc',
-      text: this.$t('Hieratic No') + ' ' + this.$t('asc'),
+      value: '冊:asc',
+      text: this.$t('冊') + ' ' + this.$t('asc'),
     },
     {
-      value: 'm_sort:desc',
-      text: this.$t('Hieratic No') + ' ' + this.$t('desc'),
-    },
-    {
-      value: 'h_sort:asc',
-      text: this.$t('Hieroglyph No') + ' ' + this.$t('asc'),
-    },
-    {
-      value: 'h_sort:desc',
-      text: this.$t('Hieroglyph No') + ' ' + this.$t('desc'),
-    },
-    {
-      value: 'vol:asc',
-      text: this.$t('Vol') + ' ' + this.$t('asc'),
-    },
-    {
-      value: 'vol:desc',
-      text: this.$t('Vol') + ' ' + this.$t('desc'),
+      value: '冊:desc',
+      text: this.$t('冊') + ' ' + this.$t('desc'),
     },
   ]
 
@@ -87,10 +65,12 @@ export default class search extends Vue {
 
   facetLabels: any = {
     "水名": this.$t('水名'),
+    "水経注：巻": this.$t('水経注：巻'),
   }
 
   facetFlags: string[] = [
     '水名',
+    '水経注：巻'
   ]
 
   loadingFlag: boolean = true
@@ -111,7 +91,7 @@ export default class search extends Vue {
 
     // 初期化
     if (!routeQuery.sort) {
-      routeQuery.sort = 'm_sort:asc'
+      routeQuery.sort = '冊:asc'
     }
     if (!routeQuery.layout) {
       routeQuery.layout = 'hpdb'

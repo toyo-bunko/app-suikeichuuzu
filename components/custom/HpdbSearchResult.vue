@@ -5,6 +5,7 @@
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="2">
+            
             <nuxt-link
               :to="
                 localePath({
@@ -13,16 +14,34 @@
                 })
               "
             >
-              <v-img :src="obj._source._thumbnail[0]" class="grey lighten-2" />
+            <v-img
+            :src="obj._source._thumbnail[0]"
+            contain
+            style="height: 150px"
+            width="100%"
+            class="grey lighten-2"
+          ></v-img>
             </nuxt-link>
             
             
           </v-col>
           <v-col cols="12" sm="10">
-            
-            <span>
-              <b>{{ $t('label') }}</b>
-            </span>
+            <h2>
+              <nuxt-link
+              :to="
+                localePath({
+                  name: 'item-id',
+                  params: { id: obj._id },
+                })
+              "
+            >
+              {{ obj._source["地名/記述"][0] }}
+              </nuxt-link>
+            </h2>
+            <p class="mt-2">
+              <b>{{$t("冊")}}:</b> {{ obj._source["冊"][0] }}
+              <b class="ml-2">{{$t("図")}}:</b> {{ obj._source["図"][0] }}
+            </p>
             <div class="text-right">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
