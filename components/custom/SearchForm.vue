@@ -212,23 +212,23 @@ export default class SearchForm extends Vue {
 
   vol: any = []
 
-  pic: string[] = []
+  pic: any = []
 
-  sn: string[] = []
+  sn: any = []
 
-  ew: string[] = []
+  ew: any = []
 
-  fb: string[] = []
+  fb: any = []
 
-  detail: string[] = []
+  detail: any = []
 
-  red: string[] = []
+  red: any = []
 
   mark: any = []
 
-  location: string = ''
+  location: any = ''
 
-  remark: string = ""
+  remark: any = ""
 
   get advanced() {
     return this.$store.state.advanced
