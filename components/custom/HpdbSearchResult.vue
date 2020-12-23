@@ -1,6 +1,10 @@
 <template>
   <div>
 
+    <p class="text-right">
+      <v-btn :href="map" target="_blank" color="primary">{{$t("view_map")}}</v-btn>
+    </p>
+
     <v-card v-for="(obj, index) in results" :key="index" class="mb-5">
       <v-card-text>
         <v-row>
@@ -75,6 +79,8 @@ import { Vue, Component } from 'nuxt-property-decorator'
   components: {},
 })
 export default class ListSearchResult extends Vue {
+  map: string = ""
+
   baseUrl: string = process.env.BASE_URL || ''
 
   get results() {
@@ -105,67 +111,18 @@ export default class ListSearchResult extends Vue {
     return this.$store.state.data
   }
 
-  select(id: string) {
-    const selected = JSON.parse(JSON.stringify(this.selected))
-    const index = selected.indexOf(id)
-    if (index === -1) {
-      selected.push(id)
-    } else if (index !== -1) {
-      selected.splice(index, 1)
+  mounted(){
+    const results = this.results
+    //const members = []
+    let url = "/etc/?curation=/data/curation.json"
+    for(let i = 0; i < results.length; i++){
+      const related = results[i]._source._relatedLink[0].split("&")
+      const member_id = related[1].split("=")[1] + "#" + related[2]
+      //members.push(member_id)
+      url += "&member="+encodeURIComponent(member_id)
     }
-    this.selected = selected
-  }
-
-  compare() {
-    const param = []
-
-    for (let i = 0; i < this.selected.length; i++) {
-      const id = this.selected[i]
-      const obj = this.getLabel(id)
-      const related = obj._source._relatedLink[0]
-
-      const relatedSpl = related.split('&')
-      const manifest = relatedSpl[0].split('=')[1]
-
-      const canvas =
-        relatedSpl[1].split('=')[1] + '#xywh=' + relatedSpl[2].split('=')[1]
-
-      param.push({
-        manifest,
-        canvas,
-      })
-    }
-
-    const url =
-      this.baseUrl +
-      '/mirador/?params=' +
-      encodeURIComponent(JSON.stringify(param)) +
-      '&layout=' +
-      this.selected.length +
-      'x1'
-    open(url, '_blank')
-  }
-
-  resetSelected() {
-    this.selected = []
-    const hits = this.results.hits.hits
-    for (let i = 0; i < hits.length; i++) {
-      const obj = hits[i]
-      obj.selected = false
-    }
-  }
-
-  deleteSelected() {
-    const selectedTemporary = this.selectedTemporary
-    const selected = JSON.parse(JSON.stringify(this.selected))
-    for (let i = 0; i < selectedTemporary.length; i++) {
-      const id = selectedTemporary[i]
-      const index = selected.indexOf(id)
-      selected.splice(index, 1)
-    }
-
-    this.selected = selected
-    this.selectedTemporary = []
+    //const url = "/etc/?curation=/data/curation.json&members="+encodeURIComponent(members)
+    this.map = url
   }
 
   getLabel(id: string) {
