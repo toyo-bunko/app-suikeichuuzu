@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Annotorious | OpenSeadragon Plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div>
+      <div id="openseadragon" style="width: 100%; height: 600px;"></div>
+    </div>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@recogito/annotorious-openseadragon@2.1.0/dist/annotorious.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://recogito.github.io/js/openseadragon/openseadragon.2.4.2.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-openseadragon@2.1.0/dist/openseadragon-annotorious.min.js"
+    ></script>
+    <script>
+      var arg = new Object()
+      url = location.search.substring(1).split('&')
+
+      for (i = 0; url[i]; i++) {
+        var k = url[i].split('=')
+        arg[k[0]] = k[1]
+      }
+
+      var id = arg.id || 1
+
+      var sampleAnnotation = {
+        '@context': 'http://www.w3.org/ns/anno.jsonld',
+        id: '#07475897-d2eb-4dce-aa12-ecb50771c734',
+        type: 'Annotation',
+        body: [
+          {
+            type: 'TextualBody',
+            value: '南4西3',
+            format: 'text/html'
+          }
+        ],
+        target: {
+          selector: {
+            type: 'FragmentSelector',
+            conformsTo: 'http://www.w3.org/TR/media-frags/',
+            value: 'xywh=21904,12336,2752,2128'
+          }
+        }
+      }
+
+      var sampleAnnotation2 = {
+        '@context': 'http://www.w3.org/ns/anno.jsonld',
+        id: '#07475897-d2eb-4dce-aa12-ecb50771c734',
+        type: 'Annotation',
+        body: [
+          {
+            type: 'TextualBody',
+            value: '南3西3',
+            format: 'text/html'
+          }
+        ],
+        target: {
+          selector: {
+            type: 'FragmentSelector',
+            conformsTo: 'http://www.w3.org/TR/media-frags/',
+            value: 'xywh=24640,10206,2752,2128'
+          }
+        }
+      }
+
+      var sampleAnnotation3 = {
+        '@context': 'http://www.w3.org/ns/anno.jsonld',
+        id: '#07475897-d2eb-4dce-aa12-ecb50771c732',
+        type: 'Annotation',
+        body: [
+          {
+            type: 'TextualBody',
+            value: '南4西3'
+          }
+        ],
+        target: {
+          selector: {
+            type: 'FragmentSelector',
+            conformsTo: 'http://www.w3.org/TR/media-frags/',
+            value: 'xywh=24640,12344,2752,2128'
+          }
+        }
+      }
+
+      window.onload = function() {
+        var viewer = OpenSeadragon({
+          id: 'openseadragon',
+          prefixUrl: 'https://recogito.github.io/js/openseadragon/images/',
+          tileSources: {
+            '@context': 'http://iiif.io/api/image/2/context.json',
+            '@id':
+              'https://iiif.dl.itc.u-tokyo.ac.jp/iiif/tmp/Suikeichuuzu.tif',
+            height: 38875,
+            width: 43890,
+            profile: ['http://iiif.io/api/image/2/level2.json'],
+            protocol: 'http://iiif.io/api/image',
+            tiles: [
+              {
+                width: 256,
+                height: 256,
+                scaleFactors: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+              }
+            ]
+          }
+        })
+
+        var anno = OpenSeadragon.Annotorious(viewer, {
+          readOnly: true,
+          locale: 'auto'
+        })
+
+        if (id == 1) {
+          anno.addAnnotation(sampleAnnotation)
+          anno.addAnnotation(sampleAnnotation3)
+        } else {
+          anno.addAnnotation(sampleAnnotation2)
+        }
+      }
+    </script>
+  </body>
+</html>
