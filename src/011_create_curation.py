@@ -540,10 +540,15 @@ for manifest in resources2:
         
         doc_url = ""
         key = ("{}{}-{}-{}").format(m_data["区画南北"], m_data["区画東西"], "表" if m_data["表裏"] == "a" else "裏", m_data["冊"])
+
+        if m_data["図"] == "西域":
+            key = m_data["図"] + key
         
         if key in docs:
             obj = images_map[docs[key]]
             doc_url = "http://codh.rois.ac.jp/software/iiif-curation-viewer/demo/?manifest=" + obj["manifest"].replace("http://www.toyo-bunko.or.jp/research/ss/iiif/item/", "https://toyo-bunko.github.io/app-suikeichuuzu/data/manifests/") + "&canvas=" + obj["canvas"]
+        else:
+            print("doc not found", key)
 
         # -------
 
