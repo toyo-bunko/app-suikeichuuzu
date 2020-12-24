@@ -188,6 +188,67 @@ for i in range(0, 33):
 
 # ----------
 
+# 本とのリンク
+
+user = "sjzt"
+password = "1924kenkyubu"
+
+with open("../static/data/collection.json") as f:
+    df = json.load(f)
+
+print(df)
+
+manifests = df["manifests"]
+
+images_map = {}
+
+for manifest in manifests:
+    mid = manifest["@id"]
+
+    filename = mid.split("/")[-1]
+
+    path = "manifests/"+filename
+
+    if not os.path.exists(path):
+
+        m_data = requests.get(mid.replace("http://", "http://"+user+":"+password+"@")).json()
+        with open(path, 'w') as f:
+            json.dump(m_data, f, ensure_ascii=False, indent=4,
+            sort_keys=True, separators=(',', ': '))
+
+    else:
+        with open(path) as f:
+            m_data = json.load(f)
+
+    canvases = m_data["sequences"][0]["canvases"]
+
+    for canvas in canvases:
+        id = canvas["@id"]
+        filename = canvas["images"][0]["resource"]["@id"].split("/")[-1]
+        images_map[filename] = {
+            "canvas" : id,
+            "manifest" : mid
+        }
+    
+
+excel_path = "data/水経注図冊子画像-区画対応.xlsx"
+
+df = pd.read_excel(excel_path, sheet_name=0, header=None, index_col=None, engine='openpyxl')
+
+r_count = len(df.index)
+c_count = len(df.columns)
+
+docs = {}
+
+for j in range(1, r_count):
+    c0 = df.iloc[j, 0]
+    c1 = df.iloc[j, 1]
+    c2 = df.iloc[j, 2].replace("冊", "")
+    # print(id)
+    docs[c0+"-"+c1+"-"+c2] = df.iloc[j, 3]
+
+# ----------
+
 # メタデータ
 names = ["水経注図地名アノテーション01-04-matome20201217", "水経注図地名アノテーション09Saiiki-matome20201217", "水経注図地名アノテーション11Etsunan-matome20201217"]
 excel_data = {}
@@ -465,11 +526,24 @@ for manifest in resources2:
             
         ]
 
+        
+
         if not pd.isnull(m_data["備考"]):
             metadata.append({
                 "value":  m_data["備考"],
                 "label": "備考"
             })
+
+        # -------
+
+        # ほんとのたいおうづけ
+        
+        doc_url = ""
+        key = ("{}{}-{}-{}").format(m_data["区画南北"], m_data["区画東西"], "表" if m_data["表裏"] == "a" else "裏", m_data["冊"])
+        
+        if key in docs:
+            obj = images_map[docs[key]]
+            doc_url = "http://codh.rois.ac.jp/software/iiif-curation-viewer/demo/?manifest=" + obj["manifest"].replace("http://www.toyo-bunko.or.jp/research/ss/iiif/item/", "https://toyo-bunko.github.io/app-suikeichuuzu/data/manifests/") + "&canvas=" + obj["canvas"]
 
         # -------
 
@@ -522,7 +596,10 @@ for manifest in resources2:
             "metadata": metadata,
             "@id": memberId,
             "thumbnail" : resource["image"] + "/"+xywh.split("=")[1]+"/256,/0/default.jpg"
-            }
+        }
+
+        if doc_url != "":
+            member["related"] = doc_url
 
         members.append(member)
 

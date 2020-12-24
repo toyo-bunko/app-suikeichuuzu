@@ -39,6 +39,14 @@
             </v-list-item-content>
           </v-list-item>
 
+          <v-list-item link href="https://www.kanzaki.com/works/2016/pub/image-annotator?u=https://toyo-bunko.github.io/app-suikeichuuzu/data/collection.json">
+            <v-list-item-action>
+              <v-icon>mdi-view-list</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>{{ $t('水系注図リスト') }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           
         </v-list>
       </v-navigation-drawer>

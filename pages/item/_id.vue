@@ -111,6 +111,15 @@
 
       <dl class="row">
         <dt class="col-sm-3 text-muted">
+          <b>{{ $t("水経注図") }}</b>
+        </dt>
+        <dd class="col-sm-9">
+          <a :href="related">{{related}}</a>
+        </dd>
+      </dl>
+
+      <dl class="row">
+        <dt class="col-sm-3 text-muted">
           <b>{{ $t('license') }}</b>
         </dt>
         <dd class="col-sm-9">
@@ -193,6 +202,7 @@ export default {
       return this.$route.params.id
     },
     title() {
+      console.log(this.related)
       const metadata = this.metadata
       let title = this.label
       metadata.map((obj) => {
