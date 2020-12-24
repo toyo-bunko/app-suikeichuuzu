@@ -22,7 +22,7 @@
         />
 
         <div class="text-right">
-          <v-btn :href="map" target="_blank" color="primary">{{$t("view_map")}}</v-btn>
+          <v-btn :href="map" target="map" color="primary">{{$t("view_map")}}</v-btn>
         </div>
 
         <Result />
