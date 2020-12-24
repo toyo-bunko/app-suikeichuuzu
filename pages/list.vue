@@ -2,7 +2,7 @@
   <div>
     <v-sheet color="grey lighten-3">
       <v-container class="py-4">
-        <h1>{{ $t('画像一覧') }}</h1>
+        <h1>{{ $t('image_list') }}</h1>
       </v-container>
     </v-sheet>
     <v-container class="my-5">
