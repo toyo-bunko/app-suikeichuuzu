@@ -109,12 +109,12 @@
         </template>
       </dl>
 
-      <dl class="row">
+      <dl class="row" v-if="doc">
         <dt class="col-sm-3 text-muted">
           <b>{{ $t("水経注図") }}</b>
         </dt>
         <dd class="col-sm-9">
-          <a :href="related">{{related}}</a>
+          <a :href="doc">{{doc}}</a>
         </dd>
       </dl>
 
@@ -169,14 +169,21 @@ export default {
         const selection = selections[i]
         const manifest = selection.within["@id"]
         const members = selection.members
+
+        let result = {}
         for(let j = 0; j < members.length; j++){
           const member = members[j]
-          const label = member["label"]
-          if(label == id){
-            member.manifest = manifest
-            return member
-          }
+          
+          member.metadata.map((m) => {
+            //console.log(m.label, m.value)
+            if(m.label == "ID" && m.value == id){
+              member.manifest = manifest
+              result = member
+            }
+
+          }) 
         }
+        return result
       }
     }
   },
@@ -202,7 +209,6 @@ export default {
       return this.$route.params.id
     },
     title() {
-      console.log(this.related)
       const metadata = this.metadata
       let title = this.label
       metadata.map((obj) => {

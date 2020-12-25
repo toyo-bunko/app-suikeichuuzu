@@ -522,6 +522,9 @@ for manifest in resources2:
             },{
                 "value": location2,
                 "label": "地名"
+            },{
+                "value": cleantext,
+                "label": "ID"
             }
             
         ]
@@ -593,18 +596,21 @@ for manifest in resources2:
                     "value": vols
                 })
 
+            
+
         # -------        
 
         member = {
-            "label": cleantext,
+            "label": location, # cleantext,
             "@type": "sc:Canvas",
             "metadata": metadata,
             "@id": memberId,
-            "thumbnail" : resource["image"] + "/"+xywh.split("=")[1]+"/256,/0/default.jpg"
+            "thumbnail" : resource["image"] + "/"+xywh.split("=")[1]+"/256,/0/default.jpg",
+            "related" : "https://toyo-bunko.github.io/app-suikeichuuzu/item/"+cleantext
         }
 
         if doc_url != "":
-            member["related"] = doc_url
+            member["doc"] = doc_url
 
         members.append(member)
 
