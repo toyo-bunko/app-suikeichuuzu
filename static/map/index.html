@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>IIIF Curation Search</title>
+    <title>IIIF Curation Map Search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
@@ -31,73 +31,107 @@
       }
     </style>
     <style>
-        .navigator .highlight{
-            opacity:    0.4;
-            filter:     alpha(opacity=40);
-            outline:    2px solid #900;
-            background-color: #900;
-        }
-        .highlight{
-            opacity:    0.4;
-            filter:     alpha(opacity=40);
-            outline:    12px auto #0A7EbE;
-            background-color: white;
-        }
-        .highlight:hover, .highlight:focus{
-            filter:     alpha(opacity=70);
-            opacity:    0.7;
-            background-color: transparent;
-        }
-        </style>
+      .navigator .highlight {
+        opacity: 0.4;
+        filter: alpha(opacity=40);
+        outline: 2px solid #900;
+        background-color: #900;
+      }
+      .highlight {
+        opacity: 0.4;
+        filter: alpha(opacity=40);
+        outline: 12px auto #0a7ebe;
+        background-color: white;
+      }
+      .highlight:hover,
+      .highlight:focus {
+        filter: alpha(opacity=70);
+        opacity: 0.7;
+        background-color: transparent;
+      }
+    </style>
   </head>
   <body>
     <div>
       <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">IIIF Curation Search</a>
+        <a class="navbar-brand"><span id="label">IIIF Curation Map Search</span></a>
       </nav>
-      
+
       <div id="openseadragon" style="width: 100%; height: 600px;"></div>
 
-      <div id="example-tip" style='display:none;width:250px;background-color:#fff;'>
-            <p>
-                The overlay can provide a class name and ID to bind additional events to.
-            </p>
-        </div>
-
       <div class="container my-5">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">総アノテーション数</th>
-            <th scope="col">検索条件に合致したアノテーション数</th>
-            <th scope="col">検索条件に合致した画像数</th>
-            <th scope="col">当該画像に含まれるアノテーション数</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row" id="all"></th>
-            <td id="annos"></td>
-            <td id="images"></td>
-            <td id="target"></td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-header">
+                アノテーション
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
 
-      <h5 class="mt-5">対象画像</h5>
-      <ul id="list"></ul>
+                  <tbody>
+                    <tr>
+                      <th width="60%">総アノテーション数</th>
+                      <td id="all"></td>
+                    </tr>
 
-      <form class="form-inline mt-5">
-        <div class="form-group mb-2">
-          <h5>キーワード検索</h5>
+                    <tr>
+                      <th>検索条件に合致したアノテーション数</th>
+                      <td id="annos"></td>
+                    </tr>
+
+                    <tr>
+                      <th>検索条件に合致した画像数</th>
+                      <td id="images"></td>
+                    </tr>
+
+                    <tr>
+                      <th>当該画像に含まれるアノテーション数</th>
+                      <td id="target"></td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-header">
+                対象画像
+              </div>
+              <ul class="list-group list-group-flush" id="list"></ul>
+            </div>
+          </div>
+
+          <div class="col-lg-4 mb-4">
+            <div class="card">
+              <div class="card-header">
+                キーワード検索
+              </div>
+              <div class="card-body">
+                <form>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="keyword"
+                    placeholder="検索語を入力してください。"
+                  />
+                  <button type="submit" class="btn btn-primary mt-3">検索</button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="form-group mx-sm-3 mb-2">
-          <input type="text" class="form-control" id="keyword" placeholder="検索語を入力してください。">
-        </div>
-        <button type="submit" class="btn btn-primary mb-2">検索</button>
-      </form>
+      </div>
     </div>
-    </div>
+
+    <footer class="footer mt-auto py-3 bg-dark">
+      <div class="container text-center">
+        <span class="text-muted">IIIF Curation Map Search.</span>
+      </div>
+    </footer>
 
     <link
       rel="stylesheet"
@@ -117,8 +151,6 @@
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"
     ></script>
-    
-    
 
     <script>
       function test(url) {
@@ -144,11 +176,15 @@
         arg[label].push(value)
       }
 
-      if(arg.q){
-        $("#keyword").val(arg.q)
+      if (arg.q) {
+        $('#keyword').val(arg.q)
       }
 
       const curation = test(arg.curation[0])
+
+      if(curation.label){
+        $("#label").text(curation.label)
+      }
 
       const ids = arg.member
 
@@ -157,8 +193,8 @@
       const map = {}
 
       const sizes = {
-        all : 0,
-        annos : 0
+        all: 0,
+        annos: 0
       }
 
       const manifests = {}
@@ -166,7 +202,7 @@
       selections.map(selection => {
         const members = selection.members
 
-        const manifest = selection.within["@id"]
+        const manifest = selection.within['@id']
 
         members.map(member => {
           const metadata = member.metadata
@@ -181,8 +217,8 @@
             }
             let values = m.value
             values = Array.isArray(values) ? values : [values]
-            values.map((value) => {
-              if(!metadataObj[label].includes(value)){
+            values.map(value => {
+              if (!metadataObj[label].includes(value)) {
                 metadataObj[label].push(value)
               }
             })
@@ -196,13 +232,17 @@
               continue
             } else if (key == 'q') {
               values.map(value => {
-                if(member.label.toLowerCase().includes(value.toLowerCase())){
+                if (member.label.toLowerCase().includes(value.toLowerCase())) {
                   return
                 }
                 let flg2 = false
                 for (let f in metadataObj) {
                   metadataObj[f].map(v => {
-                    if (String(v).toLowerCase().includes(value.toLowerCase())) {
+                    if (
+                      String(v)
+                        .toLowerCase()
+                        .includes(value.toLowerCase())
+                    ) {
                       flg2 = true
                       return
                     }
@@ -221,7 +261,11 @@
                   return
                 } else {
                   metadataObj[field].map(v => {
-                    if (String(v).toLowerCase().includes(value.toLowerCase())) {
+                    if (
+                      String(v)
+                        .toLowerCase()
+                        .includes(value.toLowerCase())
+                    ) {
                       flg2 = true
                       return
                     }
@@ -256,24 +300,23 @@
           }
 
           if (flg) {
-
             sizes.annos += 1
 
-            if(!manifests[manifest]){
+            if (!manifests[manifest]) {
               manifests[manifest] = test(manifest)
             }
 
-            const canvas_id = member["@id"].split("#")[0]
+            const canvas_id = member['@id'].split('#')[0]
 
             const mdata = manifests[manifest]
             const canvases = mdata.sequences[0].canvases
 
-            let image = ""
-            let label = ""
+            let image = ''
+            let label = ''
             canvases.map((canvas, i) => {
-              if(canvas["@id"] == canvas_id){
-                image = canvas.images[0].resource.service["@id"]
-                label = mdata.label + " p."+(i+1)
+              if (canvas['@id'] == canvas_id) {
+                image = canvas.images[0].resource.service['@id']
+                label = mdata.label + ' p.' + (i + 1)
                 return
               }
             })
@@ -281,17 +324,21 @@
             if (!map[image]) {
               map[image] = {
                 label,
-                "annos" : []
+                annos: []
               }
             }
 
             let bodyValue = member.label
-            if(member.related){
-              bodyValue = "<a target='app' href='"+member.related+"'>"+member.label+"</a>"            
+            if (member.related) {
+              bodyValue =
+                "<a target='app' href='" +
+                member.related +
+                "'>" +
+                member.label +
+                '</a>'
             }
 
             const body = [
-              
               {
                 type: 'TextualBody',
                 value: bodyValue,
@@ -299,16 +346,18 @@
               }
             ]
 
-            member.metadata.map((m) => {
-              if(Array.isArray(m.value) && typeof(m.value[0]) != "string"){
+            member.metadata.map(m => {
+              if (Array.isArray(m.value) && typeof m.value[0] != 'string') {
                 return
               }
-              body.push(
-                {
-                  "type": "TextualBody",
-                  "purpose": "tagging",
-                  "value": m.label + ": " + (Array.isArray(m.value) ? m.value.join(",") : m.value) 
-                })
+              body.push({
+                type: 'TextualBody',
+                purpose: 'tagging',
+                value:
+                  m.label +
+                  ': ' +
+                  (Array.isArray(m.value) ? m.value.join(',') : m.value)
+              })
             })
 
             map[image].annos.push({
@@ -328,88 +377,100 @@
         })
       })
 
-      let image = arg.image ? arg.image[0].replace("/info.json", "") : ""
+      let image = arg.image ? arg.image[0].replace('/info.json', '') : ''
 
       window.onload = function() {
-
-        if(Object.keys(map).length == 0){
-          $("#openseadragon").append("<p class='py-5 text-center'>表示する画像はありません。</p>")
+        if (Object.keys(map).length == 0) {
+          $('#openseadragon').append(
+            "<p class='py-5 text-center'>表示する画像はありません。</p>"
+          )
           return
         }
 
-        $("#all").append(sizes.all.toLocaleString())
-        $("#annos").append(sizes.annos.toLocaleString())
-        $("#images").append(Object.keys(map).length.toLocaleString())
+        $('#all').append(sizes.all.toLocaleString())
+        $('#annos').append(sizes.annos.toLocaleString())
+        $('#images').append(Object.keys(map).length.toLocaleString())
 
-        if(image == ""){
+        if (image == '') {
           image = Object.keys(map)[0]
         }
 
         for (let image2 in map) {
           const uri = image2 + '/info.json'
 
-          let li = $("<li></li>")
-          $("#list").append(li)
+          let li = $('<li></li>')
+          li.attr('class', 'list-group-item')
+          $('#list').append(li)
 
-          let a = $("<a></a>")
-          li.append(a)
+          const text = map[image2].label +
+                '（' +
+                map[image2].annos.length.toLocaleString() +
+                '）'
 
-          const arg2 = arg
-          arg2.image = uri
+          if (image != image2) {
 
-          let url = convertObj2Str(arg2)
-          
-          a.attr("href", url)
-          a.append(map[image2].label+"（"+map[image2].annos.length.toLocaleString()+"）")
+            let a = $('<a></a>')
+            li.append(a)
 
-          if(image == image2){
+            const newArg = JSON.parse(JSON.stringify(arg))
+            newArg.image = uri
+
+            let url = convertObj2Str(newArg)
+
+            a.attr('href', url)
+            a.append(text)
+
+          } else {
+
+            li.append(text)
+            li.append(' <span class="badge badge-secondary">選択中</span>')
+
             const tileSources = test(uri)
             var viewer = OpenSeadragon({
               id: 'openseadragon',
               prefixUrl: 'https://recogito.github.io/js/openseadragon/images/',
-              tileSources,
+              tileSources
             })
 
-            
             var anno = OpenSeadragon.Annotorious(viewer, {
               readOnly: true,
               locale: 'auto',
-              widgets: [ 
-                HelloWorldPlugin,
-              ]
+              widgets: [HelloWorldPlugin]
             })
 
             map[image2].annos.map(data => {
               anno.addAnnotation(data)
             })
-            
 
-            $("#target").append(map[image2].annos.length.toLocaleString())
+            $('#target').append(map[image2].annos.length.toLocaleString())
           }
         }
       }
 
       function typeOf(obj) {
-        return toString.call(obj).slice(8, -1).toLowerCase();
+        return toString
+          .call(obj)
+          .slice(8, -1)
+          .toLowerCase()
       }
 
-      function convertObj2Str(obj){
-        let url = ""
-        for(let key in obj){
+      function convertObj2Str(obj) {
+        let url = ''
+        for (let key in obj) {
           let values = obj[key]
           values = Array.isArray(values) ? values : [values]
-          values.map((v) => {
-            url += "&" + key + "=" + decodeURIComponent(v)
+          values.map(v => {
+            url += '&' + key + '=' + decodeURIComponent(v)
           })
         }
-        return "?" + url.substring(1)
+        return '?' + url.substring(1)
       }
 
       $('form').submit(function() {
-        arg.q = $("#keyword").val()
+        arg.q = $('#keyword').val()
         location.href = convertObj2Str(arg)
-        return false;
-      });
+        return false
+      })
     </script>
   </body>
 </html>
