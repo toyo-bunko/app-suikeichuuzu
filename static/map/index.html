@@ -48,10 +48,9 @@
 
       <div
         class="container-fluid py-2"
-        style="background-color: #f8f9fa;"
+        style="background-color: #f8f9fa; max-height : 200px; overflow-y: auto"
         id="labels"
       >
-        <span id="alert"></span>
       </div>
 
       <div class="container my-5">
@@ -412,47 +411,34 @@
               widgets: [HelloWorldPlugin]
             })
 
-            let max = 200
             const arr = map[image2].annos
-
-            if (arr.length > max) {
-              $('#alert')
-                .append(
-                  max.toLocaleString() +
-                    ' 件のみ表示（全 ' +
-                    arr.length.toLocaleString() +
-                    ' 件中）'
-                )
-                .attr('class', 'badge badge-secondary mr-3')
-            }
 
             for (let i = 0; i < arr.length; i++) {
               const data = arr[i]
 
               anno.addAnnotation(data)
 
-              if (i < max) {
-                let a = $('<a></a>')
-                a.attr('class', 'mr-3')
-                $('#labels').append(a)
-                a.append(data.label)
-                a.attr('href', '#')
-                a.on('click', function() {
-                  var xywh = data.id.split('=')[1].split(',')
+              
+              let a = $('<a></a>')
+              a.attr('class', 'mr-3')
+              $('#labels').append(a)
+              a.append(data.label)
+              a.attr('href', '#')
+              a.on('click', function() {
+                var xywh = data.id.split('=')[1].split(',')
 
-                  const b = viewer.viewport._contentBounds
+                const b = viewer.viewport._contentBounds
 
-                  const x = (parseInt(xywh[0]) / tileSources.width) * b.width
-                  const w = (parseInt(xywh[2]) / tileSources.width) * b.width
-                  const y = (parseInt(xywh[1]) / tileSources.height) * b.height
-                  const h = (parseInt(xywh[3]) / tileSources.height) * b.height
+                const x = (parseInt(xywh[0]) / tileSources.width) * b.width
+                const w = (parseInt(xywh[2]) / tileSources.width) * b.width
+                const y = (parseInt(xywh[1]) / tileSources.height) * b.height
+                const h = (parseInt(xywh[3]) / tileSources.height) * b.height
 
-                  var box1 = new OpenSeadragon.Rect(x, y, w, h)
-                  viewer.viewport.fitBoundsWithConstraints(box1)
+                var box1 = new OpenSeadragon.Rect(x, y, w, h)
+                viewer.viewport.fitBoundsWithConstraints(box1)
 
-                  return false
-                })
-              }
+                return false
+              })
             }
 
             $('#target').append(map[image2].annos.length.toLocaleString())
