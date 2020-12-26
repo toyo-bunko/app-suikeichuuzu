@@ -466,7 +466,8 @@
         var result = $.ajax({
           type: 'GET',
           url: url,
-          async: false
+          async: false,
+          dataType: "json"
         }).responseJSON
         return result
       }
